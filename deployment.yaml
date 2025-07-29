@@ -5,7 +5,7 @@ metadata:
   labels:
     app: myapp
 spec:
-  replicas: 4  # Минимально нужное количество подов для пиковой нагрузки
+  replicas: 4
   selector:
     matchLabels:
       app: myapp
@@ -16,32 +16,32 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: myregistry/myapp:latest
+        image: nginx:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         resources:
           requests:
-            cpu: "0.3"        # Учитываем пиковую нагрузку при инициализации
+            cpu: "0.3"
             memory: "128Mi"
           limits:
             cpu: "0.5"
             memory: "128Mi"
         startupProbe:
           httpGet:
-            path: /healthz
-            port: 8080
+            path: /
+            port: 80
           failureThreshold: 10
           periodSeconds: 2
         livenessProbe:
           httpGet:
-            path: /healthz
-            port: 8080
+            path: /
+            port: 80
           initialDelaySeconds: 10
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /ready
-            port: 8080
+            path: /
+            port: 80
           initialDelaySeconds: 5
           periodSeconds: 5
       topologySpreadConstraints:
